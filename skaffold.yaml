@@ -16,7 +16,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: talaat197/client
+    - image: talaat197/next-client
       context: client
       docker:
         dockerfile: Dockerfile

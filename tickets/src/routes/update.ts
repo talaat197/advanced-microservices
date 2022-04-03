@@ -4,7 +4,7 @@ import {
   validateRequest,
   NotFoundError,
   requireAuth,
-  NotAuthorizedError,
+  NotAuthorizeError,
 } from '@stgtalaat/common';
 import { Ticket } from '../models/ticket';
 
@@ -28,7 +28,7 @@ router.put(
     }
 
     if (ticket.userId !== req.currentUser!.id) {
-      throw new NotAuthorizedError();
+      throw new NotAuthorizeError();
     }
 
     ticket.set({
