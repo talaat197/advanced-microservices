@@ -7,6 +7,8 @@ import Order from '../models/order'
 
 const router = express.Router()
 
+const EXPIRATION_WINDOW_SECONDS = 15 * 60
+
 router.post('/api/orders', requireAuth, [
   body('ticketId').
     not().
@@ -28,8 +30,18 @@ router.post('/api/orders', requireAuth, [
     throw new BadRequestError("Ticket already reserved")
   }
 
+  const expiration = new Date()
+  expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS)
 
-  res.send({})
+  const order = Order.build({
+    userId: req.currentUser!.id,
+    status: OrderStatus.Created,
+    expiresAt: expiration,
+    ticket
+  })
+  await order.save()
+
+  res.status(201).send(order)
 })
 
 export { router as newOrderRouter }
